@@ -1,0 +1,7 @@
+#include <bits/stdc++.h>
+#include "tcs/tcs.hpp"
+#include "FILE"
+
+int main(int argc, char** argv) {
+    return tcs::run_checker(FUNC, argc, argv);
+}

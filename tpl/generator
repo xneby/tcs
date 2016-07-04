@@ -1,0 +1,7 @@
+#include <bits/stdc++.h>
+#include "tcs/tcs.hpp"
+#include "FILE"
+
+int main() {
+    tcs::run_generator(FUNC, "SHORT");
+}

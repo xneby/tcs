@@ -37,7 +37,7 @@ for f in $FILES; do
     for n in $F; do
         echo $(dirname $f)/$n $f
     done
-done | tsort | xargs cat | grep -vE '#include "(.*)"' > $OUT.tmp
+done | tsort | xargs awk '{print}' | grep -vE '#include "(.*)"' > $OUT.tmp
 
 (grep -E '#include <(.*)>' $OUT.tmp | sort | uniq;
 grep -vE '#(ifndef|define) .*_H' $OUT.tmp | grep -vE '#include <(.*)>' | grep -vE '#endif')> $OUT

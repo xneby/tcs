@@ -16,12 +16,12 @@ struct generator : abstract_generator<TestCase> {
     std::mt19937 rand;
 
     void srand(int seed) { rand.seed(seed); }
-    int rand_int(int a, int b) {
+    int random_int(int a, int b) {
         std::uniform_int_distribution<int> dist(a, b);
         return dist(rand);
     }
-    bool rand_bool() {
-        return rand_int(0, 1) == 1;
+    bool random_bool() {
+        return random_int(0, 1) == 1;
     }
     template <typename Iter>
     void shuffle(Iter first, Iter last) {

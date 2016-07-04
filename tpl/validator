@@ -1,0 +1,7 @@
+#include <bits/stdc++.h>
+#include "tcs/tcs.hpp"
+#include "FILE"
+
+int main() {
+    return tcs::run_validator<FUNC>();
+}
