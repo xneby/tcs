@@ -5,8 +5,8 @@ declare -A solutions
 function prepare_directories {
 	T=$(mktemp -d)
 
-	Z=$(dirname $(realpath $0))
-	ln -s $Z $T/tcs
+	Z=$(dirname "$(realpath "$0")")
+	ln -s "$Z" "$T/tcs"
 }
 
 function include_config {
@@ -19,7 +19,7 @@ function include_config {
 }
 
 function check_config {
-	if [ -z ${PROBLEM_SHORT+x} ]; then
+	if [ -z "${PROBLEM_SHORT+x}" ]; then
 		echo "The problem is improperly configured. The PROBLEM_SHORT is missing"
 		exit 1
 	fi
@@ -27,11 +27,11 @@ function check_config {
 }
 
 function make_dirs {
-	mkdir -p $R
-	mkdir -p $R/doc
-	mkdir -p $R/in
-	mkdir -p $R/out
-	mkdir -p $R/prog
+	mkdir -p "$R"
+	mkdir -p "$R/doc"
+	mkdir -p "$R/in"
+	mkdir -p "$R/out"
+	mkdir -p "$R/prog"
 }
 
 function make_code {
@@ -48,26 +48,26 @@ function make_code {
 	FILE=${BASH_REMATCH[1]}
 	FUNC=${BASH_REMATCH[2]}
 
-	m4 -G -DFUNC=$FUNC -DFILE=$FILE -DSHORT=$R - > _temporary.cpp <<HERE
+	m4 -G -DFUNC="$FUNC" -DFILE="$FILE" -DSHORT="$R" - > _temporary.cpp <<HERE
 changecom(\`@@')include(tcs/tpl/$TEMPLATE)
 HERE
 	tcs/mk_code.sh _temporary.cpp
-	mv _temporary.o.cpp $R/prog/$R$TO.cpp
+	mv _temporary.o.cpp "$R/prog/$R$TO.cpp"
 	rm _temporary.cpp
 }
 
 function make_solutions {
-	for i in ${!solutions[@]}; do
+	for i in "${!solutions[@]}"; do
 		j=$i
 		if [[ $j == "_" ]]; then
 			j=
 		fi
-		make_code ${solutions[$i]} "$j" solution
+		make_code "${solutions[$i]}" "$j" solution
 	done
 }
 
 function create_makefile_in {
-	cat > $R/makefile.in <<HERE
+	cat > "$R/makefile.in" <<HERE
 MODE=wer
 ID=$R
 SIG=tcs-$R
@@ -82,15 +82,15 @@ HERE
 }
 
 function drop_makefiles {
-	echo "-include ~/.sinol/makefile.main" > $R/makefile
-	echo "-include ~/.sinol/makefile.doc" > $R/doc/makefile
-	echo "-include ~/.sinol/makefile.prog" > $R/prog/makefile
+	echo "-include ~/.sinol/makefile.main" > "$R/makefile"
+	echo "-include ~/.sinol/makefile.doc" > "$R/doc/makefile"
+	echo "-include ~/.sinol/makefile.prog" > "$R/prog/makefile"
 }
 
 function copy_statement {
-	cp statement/statement.tex $R/doc/${R}zad.tex
-	cp statement/in/* $R/in
-	cp statement/out/* $R/out
+	cp statement/statement.tex "$R/doc/${R}zad.tex"
+	cp statement/in/* "$R/in"
+	cp statement/out/* "$R/out"
 }
 
 echo "This script will create a sinol package from problem in current workdir"
@@ -100,9 +100,9 @@ include_config
 check_config
 make_dirs
 
-make_code $CHECKER chk checker
-make_code $TESTCASE inwer validator
-make_code $TESTS ingen generator
+make_code "$CHECKER" chk checker
+make_code "$TESTCASE" inwer validator
+make_code "$TESTS" ingen generator
 make_solutions
 
 create_makefile_in

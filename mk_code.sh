@@ -16,30 +16,30 @@ function get_files {
     while :; do
         NEWFILES="$OLDFILES"
         for f in $OLDFILES; do
-            TMP=$(grep -hE '^#include "(.*)"' $f | sed 's/#include "\(.*\)"/\1/')
+            TMP=$(grep -hE '^#include "(.*)"' "$f" | sed 's/#include "\(.*\)"/\1/')
             for n in $TMP; do
-                NEWFILES="$NEWFILES $(dirname $f)/$n"
+                NEWFILES="$NEWFILES $(dirname "$f")/$n"
             done
         done
-        NEWFILES=$(echo $NEWFILES | tr ' ' '\n' | sort | uniq)
-        if [[ $OLDFILES == $NEWFILES ]]; then
+        NEWFILES=$(echo "$NEWFILES" | tr ' ' '\n' | sort | uniq)
+        if [[ $OLDFILES == "$NEWFILES" ]]; then
             break
         fi
         OLDFILES=$NEWFILES
     done
-    echo $NEWFILES
+    echo "$NEWFILES"
 }
 
-FILES=$(get_files $FILE)
+FILES=$(get_files "$FILE")
 
 for f in $FILES; do
-    F=$(grep -hE '^#include "(.*)"' $f | sed 's/#include "\(.*\)"/\1/')
+    F=$(grep -hE '^#include "(.*)"' "$f" | sed 's/#include "\(.*\)"/\1/')
     for n in $F; do
-        echo $(dirname $f)/$n $f
+        echo "$(dirname "$f")/$n" "$f"
     done
-done | tsort | xargs awk '{print}' | grep -vE '#include "(.*)"' > $OUT.tmp
+done | tsort | xargs awk '{print}' | grep -vE '#include "(.*)"' > "$OUT.tmp"
 
-(grep -E '#include <(.*)>' $OUT.tmp | sort | uniq;
-grep -vE '#(ifndef|define) .*_H' $OUT.tmp | grep -vE '#include <(.*)>' | grep -vE '#endif')> $OUT
+(grep -E '#include <(.*)>' "$OUT.tmp" | sort | uniq;
+grep -vE '#(ifndef|define) .*_H' "$OUT.tmp" | grep -vE '#include <(.*)>' | grep -vE '#endif')> "$OUT"
 
-rm $OUT.tmp
+rm "$OUT.tmp"
